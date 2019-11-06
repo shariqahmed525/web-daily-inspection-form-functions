@@ -7,6 +7,7 @@ const { auth, firestore } = admin;
 
 exports.deleteUserFromAuthentications = functions.https.onRequest((request, res) => {
   const { userId, collectionName } = request.query;
+  console.log(userId, collectionName)
   auth().deleteUser(userId)
     .then(() => {
       deleteUserFromDB(collectionName, userId, res);
