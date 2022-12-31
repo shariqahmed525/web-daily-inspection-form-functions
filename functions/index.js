@@ -10,8 +10,7 @@ exports.deleteUserFromAuthentications = functions.https.onRequest((request, res)
   console.log(userId, collectionName)
   auth().deleteUser(userId)
     .then(() => {
-      deleteUserFromDB(collectionName, userId, res);
-      return;
+      return deleteUserFromDB(collectionName, userId, res);
     })
     .catch((error) => {
       console.log(error, " error in delete user from authentication");
@@ -33,18 +32,9 @@ exports.changePasswordFromAuthentications = functions.https.onRequest((request, 
   auth().updateUser(userId, {
     password: newPassword,
   })
-    .then(() => updatePassword(userId, newPassword, res))
+    .then(() => res.send("SUCCESS"))
     .catch((error) => {
       console.log(error, " error in delete user from authentication");
       throw new Error('AUTH_UPDATE_PASSWORD_FAILED');
     });
 });
-
-const updatePassword = (docId, password, res) => {
-  firestore().collection("users").doc(docId).update({
-    password,
-  }).then(() => res.send("SUCCESS")).catch((error) => {
-    console.log(error, " error in update user password from firestore");
-    throw new Error('FIRESTORE_UPDATE_PASSWORD_FAILED');
-  });
-}
